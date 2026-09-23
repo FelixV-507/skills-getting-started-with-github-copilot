@@ -16,19 +16,27 @@ def reset_activities():
 
 
 def test_duplicate_signup_is_rejected():
+    # Arrange
     reset_activities()
+    email = "daniel@mergington.edu"
 
-    response = client.post("/activities/Chess Club/signup?email=daniel@mergington.edu")
+    # Act
+    response = client.post(f"/activities/Chess Club/signup?email={email}")
 
+    # Assert
     assert response.status_code == 400
     assert "already signed up" in response.json()["detail"].lower()
 
 
 def test_unregister_removes_participant():
+    # Arrange
     reset_activities()
+    email = "daniel@mergington.edu"
 
-    response = client.delete("/activities/Chess Club/participants?email=daniel@mergington.edu")
+    # Act
+    response = client.delete(f"/activities/Chess Club/participants?email={email}")
 
+    # Assert
     assert response.status_code == 200
-    assert "daniel@mergington.edu" not in activities["Chess Club"]["participants"]
+    assert email not in activities["Chess Club"]["participants"]
     assert "michael@mergington.edu" in activities["Chess Club"]["participants"]
